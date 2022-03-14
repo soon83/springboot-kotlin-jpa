@@ -1,0 +1,3 @@
+logging:
+  level:
+    com.soon83: debug
