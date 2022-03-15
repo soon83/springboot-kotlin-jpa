@@ -11,17 +11,18 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api/v1/users")
 class UserController(
-    private val userQueryService: UserQueryService, private val userCreateService: UserCreateService
-) {
+    private val userQueryService: UserQueryService,
+    private val userCreateService: UserCreateService) {
+
     private val log = LoggerFactory.getLogger(javaClass)
 
     @GetMapping
-    fun findAllUsers() =
-        ResponseEntity.ok(userQueryService.findAllUsers())
+    fun findAllUsers() = ResponseEntity.ok(userQueryService.findAllUsers())
 
     @GetMapping("{userId}")
     fun findUserById(@PathVariable userId: Long): ResponseEntity<UserDto> {
         log.debug("# userId: $userId")
+
         return ResponseEntity.ok(userQueryService.findUserById(userId))
     }
 
@@ -29,10 +30,8 @@ class UserController(
     fun createUser(@Valid @RequestBody userCreateDto: UserCreateDto): ResponseEntity<UserResponseDto> {
         log.debug("# userCreateDto: $userCreateDto")
 
-        userCreateService.createUser(userCreateDto)
+        val userDto = userCreateService.createUser(userCreateDto)
 
-        return ResponseEntity.ok(
-            UserResponseDto(id = 1, name = null, age = null, gender = null)
-        )
+        return ResponseEntity.ok(UserResponseDto(userDto))
     }
 }
