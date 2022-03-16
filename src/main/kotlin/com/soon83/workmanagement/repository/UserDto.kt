@@ -5,8 +5,12 @@ import com.soon83.workmanagement.interfaces.Gender
 data class UserDto(
 
     var id: Long?,
-    val name: String?,
-    val age: Int?,
-    val gender: Gender?,
-    val active: Boolean = true,
-)
+    var name: String?,
+    var age: Int?,
+    var gender: Gender?,
+    var active: Boolean = true,
+) {
+    constructor(name: String, age: Int, gender: Gender, active: Boolean): this(
+        id = null, name = name, age = age, gender = gender, active = active
+    )
+}

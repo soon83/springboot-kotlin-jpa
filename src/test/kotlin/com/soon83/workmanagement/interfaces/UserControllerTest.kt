@@ -2,7 +2,6 @@ package com.soon83.workmanagement.interfaces
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.soon83.workmanagement.application.UserCreateService
-import com.soon83.workmanagement.application.UserQueryService
 import com.soon83.workmanagement.repository.UserDto
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
