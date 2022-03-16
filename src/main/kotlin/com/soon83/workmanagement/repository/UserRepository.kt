@@ -1,4 +1,4 @@
-package com.soon83.workmanagement.repositories
+package com.soon83.workmanagement.repository
 
 import com.soon83.workmanagement.interfaces.Gender
 import org.springframework.stereotype.Repository

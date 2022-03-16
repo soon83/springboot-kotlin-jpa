@@ -1,8 +1,8 @@
-package com.soon83.workmanagement.services
+package com.soon83.workmanagement.application
 
 import com.soon83.workmanagement.interfaces.UserCreateDto
-import com.soon83.workmanagement.repositories.UserDto
-import com.soon83.workmanagement.repositories.UserRepository
+import com.soon83.workmanagement.repository.UserDto
+import com.soon83.workmanagement.repository.UserRepository
 import org.springframework.stereotype.Service
 
 @Service
