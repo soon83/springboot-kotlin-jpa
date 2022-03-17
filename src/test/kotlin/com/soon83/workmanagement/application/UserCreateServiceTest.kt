@@ -4,18 +4,16 @@ import com.soon83.workmanagement.interfaces.Gender
 import com.soon83.workmanagement.interfaces.UserCreateDto
 import com.soon83.workmanagement.repository.UserDto
 import com.soon83.workmanagement.repository.UserRepository
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.any
-import org.mockito.BDDMockito.*
+import org.mockito.BDDMockito.times
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.verify
+import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.whenever
 
 internal class UserCreateServiceTest {
 
@@ -37,7 +35,7 @@ internal class UserCreateServiceTest {
         val toUserDto = request.toUserDto()
         val userDto = UserDto(id = 1L, name = toUserDto.name, age = toUserDto.age, gender = toUserDto.gender, active = toUserDto.active)
 
-        whenever(userRepository.save(toUserDto)).thenReturn(userDto)
+        `when`(userRepository.save(any(UserDto::class.java))).thenReturn(userDto)
     }
 
     @Test
@@ -47,7 +45,6 @@ internal class UserCreateServiceTest {
         val gender = Gender.MALE
 
         val request = UserCreateDto(name = name, age = age, gender = gender)
-        val toUserDto = request.toUserDto()
 
         val createdUser = userCreateService.createUser(request)
         println(createdUser)
@@ -55,7 +52,10 @@ internal class UserCreateServiceTest {
         assertThat(createdUser).isNotNull
         assertThat(createdUser.id).isEqualTo(1L)
 
-        verify(userRepository).save(toUserDto)
-        verify(userRepository, times(1)).save(toUserDto)
+        verify(userRepository).save(any())
+        verify(userRepository, times(1)).save(any(UserDto::class.java))
     }
 }
+
+private fun <T> any(type: Class<T>): T = Mockito.any(type)
+private fun <T> any(): T = Mockito.any()
