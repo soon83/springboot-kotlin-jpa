@@ -20,25 +20,25 @@ class UserController(
     private val log = LoggerFactory.getLogger(javaClass)
 
     @GetMapping
-    fun findAllUsers(): ResponseEntity<List<UserResponseDto>> {
+    fun findAllUsers(): ResponseEntity<*> {
         val userResponseDtoList = userQueryService.findAllUsers()
             .map { UserResponseDto(it) }
 
-        return ResponseEntity.ok(userResponseDtoList)
+        return ResponseEntity.ok(Result.success(userResponseDtoList))
     }
 
     @GetMapping("{userId}")
-    fun findUserById(@PathVariable userId: Long): ResponseEntity<UserResponseDto> {
+    fun findUserById(@PathVariable userId: Long): ResponseEntity<*> {
         log.debug("# userId: $userId")
 
         val userResponseDto = userQueryService.findUserById(userId)
             ?.let { UserResponseDto(it) }
 
-        return ResponseEntity.ok(userResponseDto)
+        return ResponseEntity.ok(Result.success(userResponseDto))
     }
 
     @PostMapping
-    fun createUser(@RequestBody userCreateDto: @Valid UserCreateDto): ResponseEntity<UserResponseDto> {
+    fun createUser(@RequestBody userCreateDto: @Valid UserCreateDto): ResponseEntity<*> {
         log.debug("# userCreateDto: $userCreateDto")
 
         val user = userCreateService.createUser(userCreateDto)
@@ -46,6 +46,6 @@ class UserController(
 
         return ResponseEntity
             .created(getCurrentUri(userResponseDto.id!!))
-            .body(userResponseDto)
+            .body(Result.success(userResponseDto))
     }
 }
