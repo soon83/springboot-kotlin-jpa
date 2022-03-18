@@ -1,10 +1,14 @@
-package com.soon83.workmanagement.interfaces
+package com.soon83.workmanagement.api
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.soon83.workmanagement.application.UserCreateService
-import com.soon83.workmanagement.repository.UserDto
+import com.soon83.workmanagement.domain.Gender
+import com.soon83.workmanagement.domain.User
+import com.soon83.workmanagement.dto.UserCreateDto
+import com.soon83.workmanagement.service.UserCreateService
+import com.soon83.workmanagement.service.UserQueryService
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
+import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -22,6 +26,9 @@ internal class UserControllerTest {
     private lateinit var mockMvc: MockMvc
 
     @MockBean
+    private lateinit var userQueryService: UserQueryService
+
+    @MockBean
     private lateinit var userCreateService: UserCreateService
 
     @Test
@@ -29,28 +36,26 @@ internal class UserControllerTest {
         /**
          * given
          */
-        val createdUserId = 1L
         val name = "드록바"
         val age = 20
         val gender = Gender.MALE
-
         val userCreateDto = UserCreateDto(name = name, age = age, gender = gender)
-        given(userCreateService.createUser(userCreateDto))
-            .willReturn(UserDto(
-                id = createdUserId,
-                name = userCreateDto.name,
-                age = userCreateDto.age,
-                gender = userCreateDto.gender,
+
+        given(userCreateService.createUser(any(UserCreateDto::class.java))).willReturn(
+            User(
+                id = 1L, // createdUserId
+                name = name,
+                age = age,
+                gender = gender,
             )
         )
 
         /**
          * when
          */
-        val userCreateRequest = jacksonObjectMapper().writeValueAsString(userCreateDto)
         val resultActions = mockMvc.perform(
             post("/api/v1/users")
-                .content(userCreateRequest)
+                .content(jacksonObjectMapper().writeValueAsString(userCreateDto))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
         )
@@ -65,7 +70,9 @@ internal class UserControllerTest {
             .andExpect(jsonPath("\$.name").value(name))
             .andExpect(jsonPath("\$.age").value(age))
             .andExpect(jsonPath("\$.gender").value(gender.name))
-            .andExpect(jsonPath("\$.active").value(true))
             .andDo(print())
     }
 }
+
+private fun <T> any(type: Class<T>): T = Mockito.any(type)
+private fun <T> any(): T = Mockito.any()

@@ -1,17 +1,17 @@
-package com.soon83.workmanagement.application
+package com.soon83.workmanagement.service
 
-import com.soon83.workmanagement.interfaces.Gender
-import com.soon83.workmanagement.interfaces.UserCreateDto
-import com.soon83.workmanagement.repository.UserDto
+import com.soon83.workmanagement.domain.Gender
+import com.soon83.workmanagement.domain.User
+import com.soon83.workmanagement.dto.UserCreateDto
 import com.soon83.workmanagement.repository.UserRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.times
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 
@@ -23,6 +23,8 @@ internal class UserCreateServiceTest {
     @Mock
     private lateinit var userRepository: UserRepository
 
+    private lateinit var userCreateDto: UserCreateDto
+
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
@@ -30,30 +32,28 @@ internal class UserCreateServiceTest {
         val name = "이름"
         val age = 5
         val gender = Gender.MALE
+        userCreateDto = UserCreateDto(name = name, age = age, gender = gender)
 
-        val request = UserCreateDto(name = name, age = age, gender = gender)
-        val toUserDto = request.toUserDto()
-        val userDto = UserDto(id = 1L, name = toUserDto.name, age = toUserDto.age, gender = toUserDto.gender, active = toUserDto.active)
-
-        `when`(userRepository.save(any(UserDto::class.java))).thenReturn(userDto)
+        given(userRepository.save(any(User::class.java))).willReturn(
+            User(
+                id = 1L, // createdUserId
+                name = name,
+                age = age,
+                gender = gender
+            )
+        )
     }
 
     @Test
     fun `사용자 단건 등록`() {
-        val name = "이름"
-        val age = 5
-        val gender = Gender.MALE
-
-        val request = UserCreateDto(name = name, age = age, gender = gender)
-
-        val createdUser = userCreateService.createUser(request)
-        println(createdUser)
+        val createdUser = userCreateService.createUser(userCreateDto)
+        println("# createdUser.id: ${createdUser.id}")
 
         assertThat(createdUser).isNotNull
         assertThat(createdUser.id).isEqualTo(1L)
 
-        verify(userRepository).save(any())
-        verify(userRepository, times(1)).save(any(UserDto::class.java))
+        verify(userRepository).save(any(User::class.java))
+        verify(userRepository, times(1)).save(any(User::class.java))
     }
 }
 

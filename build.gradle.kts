@@ -10,6 +10,7 @@ plugins {
     kotlin("plugin.noarg") version kotlinVersion
     kotlin("plugin.allopen") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
+    kotlin("kapt") version kotlinVersion
 }
 
 noArg {
@@ -40,16 +41,20 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("com.querydsl:querydsl-jpa")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     runtimeOnly("com.h2database:h2")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    //annotationProcessor(group = "com.querydsl", name = "querydsl-apt", classifier = "jpa")
+    kapt(group = "com.querydsl", name = "querydsl-apt", classifier = "jpa")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
