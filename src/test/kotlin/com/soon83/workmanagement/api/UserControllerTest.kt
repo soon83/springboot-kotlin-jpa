@@ -1,8 +1,7 @@
 package com.soon83.workmanagement.api
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.soon83.workmanagement.domain.Gender
-import com.soon83.workmanagement.domain.User
+import com.soon83.workmanagement.enumcode.Gender
 import com.soon83.workmanagement.dto.UserCreateDto
 import com.soon83.workmanagement.service.UserCreateService
 import com.soon83.workmanagement.service.UserQueryService
@@ -43,14 +42,7 @@ internal class UserControllerTest {
         val gender = Gender.MALE
         val userCreateDto = UserCreateDto(name = name, age = age, gender = gender)
 
-        given(userCreateService.createUser(any(UserCreateDto::class.java))).willReturn(
-            User(
-                id = 1L, // createdUserId
-                name = name,
-                age = age,
-                gender = gender,
-            )
-        )
+        given(userCreateService.createUser(any(UserCreateDto::class.java))).willReturn(1L)
 
         /**
          * when
@@ -69,9 +61,8 @@ internal class UserControllerTest {
             .andExpect(status().isCreated)
             .andExpect(header().exists(HttpHeaders.LOCATION))
             .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString()))
-            .andExpect(jsonPath("\$.name").value(name))
-            .andExpect(jsonPath("\$.age").value(age))
-            .andExpect(jsonPath("\$.gender").value(gender.name))
+            .andExpect(jsonPath("\$.success").value(true))
+            .andExpect(jsonPath("\$.data.userId").value(1L))
             .andDo(print())
     }
 }

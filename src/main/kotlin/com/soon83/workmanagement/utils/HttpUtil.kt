@@ -7,7 +7,8 @@ class HttpUtil {
 
     companion object {
 
-        @JvmStatic fun getCurrentUri(id: Long): URI {
+        //@JvmStatic
+        fun getCurrentUri(id: Long): URI {
             val path = "/$id"
             val requestUri = ServletUriComponentsBuilder.fromCurrentRequest().toUriString()
             //log.debug("# requestUri: $requestUri")

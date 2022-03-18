@@ -1,5 +1,6 @@
 package com.soon83.workmanagement.api
 
+import com.soon83.workmanagement.dto.Res
 import com.soon83.workmanagement.dto.UserCreateDto
 import com.soon83.workmanagement.dto.UserResponseDto
 import com.soon83.workmanagement.service.UserCreateService
@@ -20,32 +21,29 @@ class UserController(
     private val log = LoggerFactory.getLogger(javaClass)
 
     @GetMapping
-    fun findAllUsers(): ResponseEntity<*> {
+    fun findAllUsers(): ResponseEntity<Res<List<UserResponseDto>>> {
         val userResponseDtoList = userQueryService.findAllUsers()
-            .map { UserResponseDto(it) }
 
-        return ResponseEntity.ok(Result.success(userResponseDtoList))
+        return ResponseEntity.ok(Res.success(userResponseDtoList))
     }
 
     @GetMapping("{userId}")
-    fun findUserById(@PathVariable userId: Long): ResponseEntity<*> {
+    fun findUserById(@PathVariable userId: Long): ResponseEntity<Res<UserResponseDto?>> {
         log.debug("# userId: $userId")
 
-        val userResponseDto = userQueryService.findUserById(userId)
-            ?.let { UserResponseDto(it) }
+        val userResponseDto = userQueryService.findUserById(userId);
 
-        return ResponseEntity.ok(Result.success(userResponseDto))
+        return ResponseEntity.ok(Res.success(userResponseDto))
     }
 
     @PostMapping
-    fun createUser(@RequestBody userCreateDto: @Valid UserCreateDto): ResponseEntity<*> {
+    fun createUser(@Valid @RequestBody userCreateDto: UserCreateDto): ResponseEntity<Res<UserResponseDto>> {
         log.debug("# userCreateDto: $userCreateDto")
 
-        val user = userCreateService.createUser(userCreateDto)
-        val userResponseDto = UserResponseDto(user)
+        val createdUserId = userCreateService.createUser(userCreateDto)
 
         return ResponseEntity
-            .created(getCurrentUri(userResponseDto.id!!))
-            .body(Result.success(userResponseDto))
+            .created(getCurrentUri(createdUserId))
+            .body(Res.success(UserResponseDto(createdUserId)))
     }
 }

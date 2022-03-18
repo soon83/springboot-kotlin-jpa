@@ -49,6 +49,7 @@ dependencies {
     implementation("com.querydsl:querydsl-jpa")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+    developmentOnly("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0")
 
     runtimeOnly("com.h2database:h2")
 

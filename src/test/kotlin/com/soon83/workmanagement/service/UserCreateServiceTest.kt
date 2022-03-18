@@ -1,6 +1,6 @@
 package com.soon83.workmanagement.service
 
-import com.soon83.workmanagement.domain.Gender
+import com.soon83.workmanagement.enumcode.Gender
 import com.soon83.workmanagement.domain.User
 import com.soon83.workmanagement.dto.UserCreateDto
 import com.soon83.workmanagement.repository.UserRepository
@@ -29,11 +29,18 @@ internal class UserCreateServiceTest {
     @BeforeEach
     fun setUp() {
         MockitoAnnotations.openMocks(this)
+    }
 
+    @Test
+    @DisplayName("001. User 단건 등록 - 필수 파라미터를 다 채움")
+    fun test001() {
+        /**
+         * given
+         */
         val name = "이름"
         val age = 5
         val gender = Gender.MALE
-        userCreateDto = UserCreateDto(name = name, age = age, gender = gender)
+        val userCreateDto = UserCreateDto(name = name, age = age, gender = gender)
 
         given(userRepository.save(any(User::class.java))).willReturn(
             User(
@@ -43,16 +50,18 @@ internal class UserCreateServiceTest {
                 gender = gender
             )
         )
-    }
 
-    @Test
-    @DisplayName("001. User 단건 등록 - 필수 파라미터를 다 채움")
-    fun test001() {
-        val createdUser = userCreateService.createUser(userCreateDto)
-        println("# createdUser.id: ${createdUser.id}")
+        /**
+         * when
+         */
+        val createdUserId = userCreateService.createUser(userCreateDto)
+        println("# createdUserId: $createdUserId")
 
-        assertThat(createdUser).isNotNull
-        assertThat(createdUser.id).isEqualTo(1L)
+        /**
+         * then
+         */
+        assertThat(createdUserId).isNotNull
+        assertThat(createdUserId).isEqualTo(1L)
 
         verify(userRepository).save(any(User::class.java))
         verify(userRepository, times(1)).save(any(User::class.java))

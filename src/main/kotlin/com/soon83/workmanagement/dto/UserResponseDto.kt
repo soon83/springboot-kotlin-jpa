@@ -1,15 +1,23 @@
 package com.soon83.workmanagement.dto
 
-import com.soon83.workmanagement.domain.Gender
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.soon83.workmanagement.enumcode.Gender
 import com.soon83.workmanagement.domain.User
 
 data class UserResponseDto(
-    val id: Long?,
-    val name: String?,
-    val age: Int?,
-    val gender: Gender?,
+
+    @field: JsonProperty("userId")
+    var id: Long? = null,
+    var name: String? = null,
+    var age: Int? = null,
+    var gender: Gender? = null,
 ) {
-    constructor(user: User) : this(
+
+    constructor(userId: Long): this(
+        id = userId
+    )
+
+    constructor(user: User): this(
         id = user.id,
         name = user.name,
         age = user.age,
