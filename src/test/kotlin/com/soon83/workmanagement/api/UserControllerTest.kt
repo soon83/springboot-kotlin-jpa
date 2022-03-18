@@ -6,6 +6,7 @@ import com.soon83.workmanagement.domain.User
 import com.soon83.workmanagement.dto.UserCreateDto
 import com.soon83.workmanagement.service.UserCreateService
 import com.soon83.workmanagement.service.UserQueryService
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito
@@ -32,7 +33,8 @@ internal class UserControllerTest {
     private lateinit var userCreateService: UserCreateService
 
     @Test
-    fun `User 단건 등록`() {
+    @DisplayName("001. User 단건 등록 - 필수 파라미터를 다 채움")
+    fun test001() {
         /**
          * given
          */
