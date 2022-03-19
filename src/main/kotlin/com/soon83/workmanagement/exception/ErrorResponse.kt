@@ -29,23 +29,23 @@ class ErrorResponse(
     )
 
     companion object {
-        fun of(code: ErrorCode): ErrorResponse? {
+        fun of(code: ErrorCode): ErrorResponse {
             return ErrorResponse(code, ArrayList())
         }
 
-        fun of(code: ErrorCode, errors: List<FieldError>): ErrorResponse? {
+        fun of(code: ErrorCode, errors: List<FieldError>): ErrorResponse {
             return ErrorResponse(code, errors)
         }
 
-        fun of(code: ErrorCode, bindingResult: BindingResult): ErrorResponse? {
+        fun of(code: ErrorCode, bindingResult: BindingResult): ErrorResponse {
             return ErrorResponse(code, FieldError.of(bindingResult))
         }
 
-        fun of(code: ErrorCode, errorMessage: String): ErrorResponse? {
+        fun of(code: ErrorCode, errorMessage: String): ErrorResponse {
             return ErrorResponse(code, errorMessage)
         }
 
-        fun of(e: MethodArgumentTypeMismatchException): ErrorResponse? {
+        fun of(e: MethodArgumentTypeMismatchException): ErrorResponse {
             val value = e.value ?: ""
             val errors = FieldError.of(e.name, value.toString(), e.errorCode)
             return ErrorResponse(ErrorCode.INVALID_TYPE_VALUE, errors)
@@ -71,13 +71,13 @@ class ErrorResponse(
 
             fun of(bindingResult: BindingResult): List<FieldError> {
                 val fieldErrors: MutableList<org.springframework.validation.FieldError> = bindingResult.fieldErrors
-                fieldErrors.forEach { e ->
+                /*fieldErrors.forEach { e ->
                     println("#############################################")
                     println("# error.field: ${e.field}")
                     println("# error.rejectedValue: ${e.rejectedValue}")
                     println("# error.defaultMessage: ${e.defaultMessage}")
                     println("#############################################")
-                }
+                }*/
                 return fieldErrors
                     .map {
                         FieldError(
