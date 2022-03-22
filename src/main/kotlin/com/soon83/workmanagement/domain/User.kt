@@ -4,6 +4,7 @@ import com.soon83.workmanagement.enumcode.Gender
 import javax.persistence.*
 
 @Entity
+@Table(name = "app_user")
 class User(
 
     @Id
