@@ -51,7 +51,8 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     developmentOnly("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0")
 
-    runtimeOnly("com.h2database:h2")
+    //runtimeOnly("com.h2database:h2")
+    implementation("com.h2database:h2")
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     //annotationProcessor(group = "com.querydsl", name = "querydsl-apt", classifier = "jpa")
